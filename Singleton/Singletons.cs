@@ -1,12 +1,12 @@
-using System;
-using System.Collections;
-using System.Collections.Generic;
-using Unity.VisualScripting;
-using UnityEngine;
-using UnityEngine.UIElements;
-
 namespace GrayHoodT
-{ 
+{
+    using System;
+    using System.Collections;
+    using System.Collections.Generic;
+    using Unity.VisualScripting;
+    using UnityEngine;
+    using UnityEngine.UIElements;
+
     public abstract class Singleton<T> : MonoBehaviour where T : MonoBehaviour
     {
         private static bool _isDestroyed = false;

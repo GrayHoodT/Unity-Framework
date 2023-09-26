@@ -1,16 +1,15 @@
+namespace GrayHoodT
+{
+
 #if UNITY_EDITOR
 #define ENABLE_LOG
 #endif
 
-using System;
-using UnityEngine;
+    using System;
+    using UnityEngine;
 
-namespace GrayHoodT
-{
     public static class Debuger
     {
-        #region Debug
-
         public static bool isDebugBuild
         {
             get { return Debug.isDebugBuild; }
@@ -69,7 +68,5 @@ namespace GrayHoodT
         {
             if (!condition) throw new Exception();
         }
-
-        #endregion
     }
 }
