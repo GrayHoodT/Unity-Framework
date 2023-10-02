@@ -9,7 +9,7 @@ namespace GrayHoodT
 
     public abstract class Singleton<T> : MonoBehaviour where T : MonoBehaviour
     {
-        private static bool _isDestroyed = false;
+        private static bool _shuttingDown = false;
         private static object _lock = new object();
         private static T _instance;
 
@@ -17,9 +17,9 @@ namespace GrayHoodT
         {
             get
             {
-                if (_isDestroyed)
+                if (_shuttingDown)
                 {
-                    Utilities.LogError($"An <{typeof(T).Name}> instance of game object has already been destroyed. : Return Null!");
+                    Debug.LogWarning($"An <{typeof(T).Name}> instance of game object has already been destroyed. : Return Null!");
                     return null;
                 }
 
@@ -31,7 +31,7 @@ namespace GrayHoodT
 
                         if(_instance == null)
                         {
-                            Utilities.LogError($"Can't find <{typeof(T).Name}> game object. : Return Null!");
+                            Debug.LogError($"Can't find <{typeof(T).Name}> game object. : Return Null!");
                             return null;
                         }
                     }
@@ -39,7 +39,6 @@ namespace GrayHoodT
                     return _instance;
                 }
             }
-            private set => _instance = value;
         }
 
         protected virtual void Awake()
@@ -52,12 +51,12 @@ namespace GrayHoodT
 
         protected virtual void OnApplicationQuit()
         {
-            _isDestroyed = true;
+            _shuttingDown = true;
         }
 
         protected virtual void OnDestroy()
         {
-            _isDestroyed = true;
+            _shuttingDown = true;
         }
     }
 
