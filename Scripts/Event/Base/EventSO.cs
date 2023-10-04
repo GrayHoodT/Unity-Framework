@@ -13,7 +13,7 @@ namespace GrayHoodT.Events
             remove => _onEventRaised -= value;
         }
 
-        public virtual void Raise(object sender)
+        public virtual void Invoke(object sender)
         {
             _onEventRaised?.Invoke(sender);
         }
@@ -29,7 +29,7 @@ namespace GrayHoodT.Events
             remove => _onEventRaised -= value;
         }
 
-        public virtual void Raise(object sender, T eventArgs)
+        public virtual void Invoke(object sender, T eventArgs)
         {
             _onEventRaised?.Invoke(sender, eventArgs);
         }
