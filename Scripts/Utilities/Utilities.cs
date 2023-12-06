@@ -5,7 +5,7 @@ using GrayHoodT.Enums;
 
 namespace GrayHoodT
 {
-    public static class Utils
+    public static class Utilities
     {
         
     }

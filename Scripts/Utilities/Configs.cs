@@ -4,7 +4,7 @@ using UnityEngine;
 
 namespace GrayHoodT
 {
-    public static class Globals
+    public static class Configs
     {
         /* 씬 전환 관련 환경 변수 모음. */
         public const float FADE_ACTIVE_VALUE = 1f;
