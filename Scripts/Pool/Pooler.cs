@@ -34,20 +34,17 @@ public class Pooler : MonoBehaviour, IPooler
 
     #endregion
 
-    public virtual void Initialize(Poolable prefab, int defaultCapacity = 5, int maxSize = 10)
+    protected virtual void Awake()
     {
-        Prefab = prefab;
-        DefaultCapacity = defaultCapacity;
-        MaxSize = maxSize;
         ObjectPool = new ObjectPool<Poolable>(CreatePooledObject, OnPooledObjectGot, OnPooledObjectReleased, OnPooledObjectDestroyed, true, DefaultCapacity, MaxSize);
         ActivedObjectList = new List<Poolable>();
     }
 
-    public virtual Poolable SpawnPooledObject(Vector3 position = default, Vector3 rotation = default, Vector3 localScale = default)
+    public virtual Poolable Spawn(Vector3 position = default, Vector3 rotation = default, Vector3 localScale = default)
     {
         Poolable pooledObject = ObjectPool.Get();
         pooledObject.transform.position = position;
-        pooledObject.transform.eulerAngles = rotation;
+        pooledObject.transform.rotation = Quaternion.Euler(rotation);
         pooledObject.transform.localScale = localScale;
         pooledObject.gameObject.SetActive(true);
 
@@ -60,7 +57,7 @@ public class Pooler : MonoBehaviour, IPooler
         ObjectPool.Release(pooledObject);
     }
 
-    public virtual void Clear()
+    public virtual void ReleaseAll()
     {
         for(var i = ActivedObjectList.Count - 1; i >= 0; i--)
         {
@@ -96,6 +93,16 @@ public class Pooler : MonoBehaviour, IPooler
     {
         Destroy(pooledObject.gameObject);
         destroyed?.Invoke(pooledObject);
+    }
+
+    #endregion
+
+    #region Factory Method Pattern
+
+    public static Pooler CreatePooler(Pooler poolerPerfab, Vector3 position = default, Quaternion rotation = default, Transform parent = default)
+    {
+        Pooler pooler = Instantiate<Pooler>(poolerPerfab, position, rotation, parent);
+        return pooler;
     }
 
     #endregion
