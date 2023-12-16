@@ -62,7 +62,7 @@ public class Pooler : MonoBehaviour, IPooler
         for(var i = ActivedObjectList.Count - 1; i >= 0; i--)
         {
             var pooledObject = ActivedObjectList[i];
-            ObjectPool.Release(pooledObject);
+            Release(pooledObject);
         }
     }
 
