@@ -7,42 +7,42 @@ public class Pooler : MonoBehaviour, IPooler
 {
     [field: Header("Configs")]
     [field: SerializeField]
-    public Poolable Prefab { get; protected set; }
+    public Pooled Prefab { get; protected set; }
     [field: SerializeField]
     public int DefaultCapacity { get; protected set; }
     [field: SerializeField]
     public int MaxSize { get; protected set; }
 
-    public IObjectPool<Poolable> ObjectPool { get; protected set; }
+    public IObjectPool<Pooled> ObjectPool { get; protected set; }
 
     [field: Space(5)]
     [field: Header("Actived Objects")]
     [field: SerializeField]
-    public List<Poolable> ActivedObjectList { get; protected set; }
+    public List<Pooled> ActivedObjectList { get; protected set; }
 
     #region Events
 
-    protected Action<Poolable> created;
-    protected Action<Poolable> got;
-    protected Action<Poolable> released;
-    protected Action<Poolable> destroyed;
+    protected Action<Pooled> created;
+    protected Action<Pooled> got;
+    protected Action<Pooled> released;
+    protected Action<Pooled> destroyed;
 
-    public event Action<Poolable> Created { add => created += value; remove => created -= value; }
-    public event Action<Poolable> Got { add => got += value; remove => created -= value; }
-    public event Action<Poolable> Released { add => released += value; remove => created -= value; }
-    public event Action<Poolable> Destroyed { add => destroyed += value; remove => created -= value; }
+    public event Action<Pooled> Created { add => created += value; remove => created -= value; }
+    public event Action<Pooled> Got { add => got += value; remove => created -= value; }
+    public event Action<Pooled> Released { add => released += value; remove => created -= value; }
+    public event Action<Pooled> Destroyed { add => destroyed += value; remove => created -= value; }
 
     #endregion
 
     protected virtual void Awake()
     {
-        ObjectPool = new ObjectPool<Poolable>(CreatePooledObject, OnPooledObjectGot, OnPooledObjectReleased, OnPooledObjectDestroyed, true, DefaultCapacity, MaxSize);
-        ActivedObjectList = new List<Poolable>();
+        ObjectPool = new ObjectPool<Pooled>(CreatePooledObject, OnPooledObjectGot, OnPooledObjectReleased, OnPooledObjectDestroyed, true, DefaultCapacity, MaxSize);
+        ActivedObjectList = new List<Pooled>();
     }
 
-    public virtual Poolable Spawn(Vector3 position = default, Vector3 rotation = default, Vector3 localScale = default)
+    public virtual Pooled Spawn(Vector3 position = default, Vector3 rotation = default, Vector3 localScale = default)
     {
-        Poolable pooledObject = ObjectPool.Get();
+        Pooled pooledObject = ObjectPool.Get();
         pooledObject.transform.position = position;
         pooledObject.transform.rotation = Quaternion.Euler(rotation);
         pooledObject.transform.localScale = localScale;
@@ -51,7 +51,7 @@ public class Pooler : MonoBehaviour, IPooler
         return pooledObject;
     }
 
-    public virtual void Release(Poolable pooledObject)
+    public virtual void Release(Pooled pooledObject)
     {
         pooledObject.gameObject.SetActive(false);
         ObjectPool.Release(pooledObject);
@@ -68,28 +68,28 @@ public class Pooler : MonoBehaviour, IPooler
 
     #region Object Pool Callbacks
 
-    protected virtual Poolable CreatePooledObject()
+    protected virtual Pooled CreatePooledObject()
     {
-        Poolable createdObject = Instantiate(Prefab);
+        Pooled createdObject = Instantiate(Prefab);
         createdObject.SetPool(this);
         created?.Invoke(createdObject);
 
         return createdObject;
     }
 
-    protected virtual void OnPooledObjectGot(Poolable pooledObject)
+    protected virtual void OnPooledObjectGot(Pooled pooledObject)
     {
         ActivedObjectList.Add(pooledObject);
         got?.Invoke(pooledObject);
     }
 
-    protected virtual void OnPooledObjectReleased(Poolable pooledObject)
+    protected virtual void OnPooledObjectReleased(Pooled pooledObject)
     {
         ActivedObjectList.Remove(pooledObject);
         released?.Invoke(pooledObject);
     }
 
-    protected virtual void OnPooledObjectDestroyed(Poolable pooledObject)
+    protected virtual void OnPooledObjectDestroyed(Pooled pooledObject)
     {
         Destroy(pooledObject.gameObject);
         destroyed?.Invoke(pooledObject);
