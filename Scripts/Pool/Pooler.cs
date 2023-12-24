@@ -1,109 +1,159 @@
 using System;
 using System.Collections.Generic;
-using UnityEngine;
-using UnityEngine.Pool;
 
-public class Pooler : MonoBehaviour, IPooler
+namespace GrayHoodT.Pool
 {
-    [field: Header("Configs")]
-    [field: SerializeField]
-    public Pooled Prefab { get; protected set; }
-    [field: SerializeField]
-    public int DefaultCapacity { get; protected set; }
-    [field: SerializeField]
-    public int MaxSize { get; protected set; }
-
-    public IObjectPool<Pooled> ObjectPool { get; protected set; }
-
-    [field: Space(5)]
-    [field: Header("Actived Objects")]
-    [field: SerializeField]
-    public List<Pooled> ActivedObjectList { get; protected set; }
-
-    #region Events
-
-    protected Action<Pooled> created;
-    protected Action<Pooled> got;
-    protected Action<Pooled> released;
-    protected Action<Pooled> destroyed;
-
-    public event Action<Pooled> Created { add => created += value; remove => created -= value; }
-    public event Action<Pooled> Got { add => got += value; remove => created -= value; }
-    public event Action<Pooled> Released { add => released += value; remove => created -= value; }
-    public event Action<Pooled> Destroyed { add => destroyed += value; remove => created -= value; }
-
-    #endregion
-
-    protected virtual void Awake()
+    public class Pooler<T> : IDisposable, IPooler<T> where T : class
     {
-        ObjectPool = new ObjectPool<Pooled>(CreatePooledObject, OnPooledObjectGot, OnPooledObjectReleased, OnPooledObjectDestroyed, true, DefaultCapacity, MaxSize);
-        ActivedObjectList = new List<Pooled>();
-    }
+        #region Fields
 
-    public virtual Pooled Spawn(Vector3 position = default, Vector3 rotation = default, Vector3 localScale = default)
-    {
-        Pooled pooledObject = ObjectPool.Get();
-        pooledObject.transform.position = position;
-        pooledObject.transform.rotation = Quaternion.Euler(rotation);
-        pooledObject.transform.localScale = localScale;
-        pooledObject.gameObject.SetActive(true);
+        private readonly int maxSize;
+        private readonly bool isInitiallyCreated;
+        private readonly bool isCollectionCheck;
 
-        return pooledObject;
-    }
+        private readonly List<T> borrowedList;
+        private readonly List<T> returnedList;
 
-    public virtual void Release(Pooled pooledObject)
-    {
-        pooledObject.gameObject.SetActive(false);
-        ObjectPool.Release(pooledObject);
-    }
+        #endregion
 
-    public virtual void ReleaseAll()
-    {
-        for(var i = ActivedObjectList.Count - 1; i >= 0; i--)
+        #region Properties
+
+        public int AllCount { get; private set; }
+        public int BorrowedCount => borrowedList.Count;
+        public int ReturnedCount => returnedList.Count;
+
+        #endregion
+
+        #region Events
+
+        private readonly Func<T> created;
+        private readonly Action<T> got;
+        private readonly Action<T> released;
+        private readonly Action<T> destroyed;
+
+        #endregion
+
+        #region Constructors
+
+        public Pooler(Func<T> createCall, Action<T> gotCall = null, Action<T> releasedCall = null, Action<T> destroyedCall = null, bool isCollectionCheck = true, int defaultCapacity = 10, int maxSize = 10000, bool isInitiallyCreated = false)
         {
-            var pooledObject = ActivedObjectList[i];
-            Release(pooledObject);
+            if (createCall == null)
+                throw new ArgumentNullException("createFunc");
+
+            if (maxSize <= 0)
+                throw new ArgumentException("Max Size must be greater than 0", "maxSize");
+
+            this.maxSize = maxSize;
+            this.isInitiallyCreated = isInitiallyCreated;
+            this.isCollectionCheck = isCollectionCheck;
+
+            borrowedList = new List<T>(defaultCapacity);
+            returnedList = new List<T>(defaultCapacity);
+            created = createCall;
+            got = gotCall;
+            released = releasedCall;
+            destroyed = destroyedCall;
+
+            if(this.isInitiallyCreated == true)
+            {
+                for(var i = 0; i < defaultCapacity; i++)
+                {
+                    T value = created();
+                    returnedList.Add(value);
+                    AllCount++;
+                }
+            }
+        }
+
+        #endregion
+
+        #region Public Methods
+
+        public T Borrow()
+        {
+            T value;
+            if (returnedList.Count == 0)
+            {
+                value = created();
+                AllCount++;
+            }
+            else
+            {
+                int index = returnedList.Count - 1;
+                value = returnedList[index];
+                returnedList.RemoveAt(index);
+            }
+
+            borrowedList.Add(value);
+            got?.Invoke(value);
+            return value;
+        }
+
+        public bool Borrow(out T value)
+        {
+            value = Borrow();
+            return value != null;
+        }
+
+        public void Return()
+        {
+            foreach(T element in borrowedList)
+            {
+                borrowedList.Remove(element);
+                released?.Invoke(element);
+                
+                if (BorrowedCount < maxSize)
+                    returnedList.Add(element);
+                else
+                    destroyed?.Invoke(element);
+            }
+        }
+
+        public void Return(T element)
+        {
+            if (isCollectionCheck)
+            {
+                bool isAlreadyReleased = (returnedList.Contains(element) == true && returnedList.Count > 0) && (borrowedList.Contains(element) == false && borrowedList.Count > 0);
+                
+                if (isAlreadyReleased == true)
+                    throw new InvalidOperationException("Trying to release an object that has already been released to the pool.");
+            }
+
+            borrowedList.Remove(element);
+            released?.Invoke(element);
+
+            if (BorrowedCount < maxSize)
+                returnedList.Add(element);
+            else
+                destroyed?.Invoke(element);
+        }
+
+        public void Clear()
+        {
+            if(destroyed != null)
+            {
+                foreach (T element in borrowedList)
+                {
+                    destroyed(element);
+                }
+
+                foreach(T element in returnedList)
+                {
+                    destroyed(element);
+                }
+            }
+
+            borrowedList.Clear();
+            returnedList.Clear();
+            AllCount = 0;
+        }
+
+        #endregion
+
+        public void Dispose()
+        {
+            Clear();
         }
     }
-
-    #region Object Pool Callbacks
-
-    protected virtual Pooled CreatePooledObject()
-    {
-        Pooled createdObject = Instantiate(Prefab);
-        createdObject.SetPool(this);
-        created?.Invoke(createdObject);
-
-        return createdObject;
-    }
-
-    protected virtual void OnPooledObjectGot(Pooled pooledObject)
-    {
-        ActivedObjectList.Add(pooledObject);
-        got?.Invoke(pooledObject);
-    }
-
-    protected virtual void OnPooledObjectReleased(Pooled pooledObject)
-    {
-        ActivedObjectList.Remove(pooledObject);
-        released?.Invoke(pooledObject);
-    }
-
-    protected virtual void OnPooledObjectDestroyed(Pooled pooledObject)
-    {
-        Destroy(pooledObject.gameObject);
-        destroyed?.Invoke(pooledObject);
-    }
-
-    #endregion
-
-    #region Factory Method Pattern
-
-    public static Pooler CreatePooler(Pooler poolerPerfab, Vector3 position = default, Quaternion rotation = default, Transform parent = default)
-    {
-        Pooler pooler = Instantiate<Pooler>(poolerPerfab, position, rotation, parent);
-        return pooler;
-    }
-
-    #endregion
 }
+
