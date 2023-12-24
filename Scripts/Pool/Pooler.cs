@@ -69,7 +69,7 @@ namespace GrayHoodT.Pool
 
         #region Public Methods
 
-        public T Borrow()
+        public T Take()
         {
             T value;
             if (returnedList.Count == 0)
@@ -89,9 +89,9 @@ namespace GrayHoodT.Pool
             return value;
         }
 
-        public bool Borrow(out T value)
+        public bool Take(out T value)
         {
-            value = Borrow();
+            value = Take();
             return value != null;
         }
 
