@@ -3,18 +3,18 @@ namespace GrayHoodT.Pool
     public interface IPoolable<T> where T : class
     {
         /// <summary>
-        /// °´Ã¼ ¹İÈ¯ Àå¼Ò.
+        /// ê°ì²´ ë°˜í™˜ ì¥ì†Œ.
         /// </summary>
         IPooler<T> Pooler { get; }
 
         /// <summary>
-        /// °´Ã¼ ¹İÈ¯ Àå¼Ò¸¦ ¼³Á¤ÇÕ´Ï´Ù.
+        /// ê°ì²´ ë°˜í™˜ ì¥ì†Œë¥¼ ì„¤ì •í•©ë‹ˆë‹¤.
         /// </summary>
-        /// <param name="pooler">¹İÈ¯ Àå¼Ò.</param>
+        /// <param name="pooler">ë°˜í™˜ ì¥ì†Œ.</param>
         void SetPooler(IPooler<T> pooler);
 
         /// <summary>
-        /// °´Ã¼¸¦ ¹İÈ¯ÇÕ´Ï´Ù.
+        /// ê°ì²´ë¥¼ ë°˜í™˜í•©ë‹ˆë‹¤.
         /// </summary>
         void ReturnToPooler();
     }

@@ -3,46 +3,46 @@ namespace GrayHoodT.Pool
     public interface IPooler<T> where T : class 
     {
         /// <summary>
-        /// ╦П╣Г ╟╢ц╪юг ╪Ж.
+        /// К╙╗К⌠═ Й╟²Л╡╢Л²≤ Л┬≤.
         /// </summary>
         int AllCount { get; }
 
         /// <summary>
-        /// ╨Т╥а╟ё ╟╢ц╪юг ╪Ж.
+        /// Й╟─Л═╦Й╟└ Й╟²Л╡╢Л²≤ Л┬≤.
         /// </summary>
         int BorrowedCount { get; }
 
         /// <summary>
-        /// ╨╦╟Э аъюн ╟╢ц╪юг ╪Ж.
+        /// КЁ╢Й╢─ Л╓▒Л²╦ Й╟²Л╡╢Л²≤ Л┬≤.
         /// </summary>
         int ReturnedCount { get; }
 
         /// <summary>
-        /// ╟Э╦╝юз╥н╨нем ╟╢ц╪╦╕ ╟║а╝©и╢о╢ы.
+        /// Й╢─К╕╛Л·░К║°К╤─М└╟ Й╟²Л╡╢К╔╪ Й╟─Л═╦Л≤╣К▀┬К▀╓.
         /// </summary>
-        /// <returns>╟║а╝©б ╟╢ц╪.</returns>
+        /// <returns>Й╟─Л═╦Л≤╗ Й╟²Л╡╢.</returns>
         T Take();
 
         /// <summary>
-        /// ╟Э╦╝юз╥н╨нем ╟╢ц╪╦╕ ╟║а╝©и╢о╢ы.
+        /// Й╢─К╕╛Л·░К║°К╤─М└╟ Й╟²Л╡╢К╔╪ Й╟─Л═╦Л≤╣К▀┬К▀╓.
         /// </summary>
-        /// <param name="value">╟║а╝©б ╟╢ц╪.</param>
-        /// <returns>╟А╟З ╪╨╟Ь ю╞╧╚. true = ╪╨╟Ь, false = ╫гфп</returns>
+        /// <param name="value">Й╟─Л═╦Л≤╗ Й╟²Л╡╢.</param>
+        /// <returns>Й╡╟ЙЁ╪ Л└╠ЙЁ╣ Л°═К╛╢. true = Л└╠ЙЁ╣, false = Л▀╓М▄╗</returns>
         bool Take(out T value);
 
         /// <summary>
-        /// ╟Э╦╝юз╥н╨нем ╟║а╝╟ё ╦П╣Г ╟╢ц╪╦╕ ╧щх╞ ╧ч╬ф ©и╢о╢ы.
+        /// Й╢─К╕╛Л·░К║°К╤─М└╟ Й╟─Л═╦Й╟└ К╙╗К⌠═ Й╟²Л╡╢К╔╪ К╟≤М≥≤ К╟⌡Л∙└ Л≤╣К▀┬К▀╓.
         /// </summary>
         void Return();
 
         /// <summary>
-        /// ╟Э╦╝юз╥н╨нем ╟║а╝╟ё ╟╢ц╪╦╕ ╧щх╞гу╢о╢ы.
+        /// Й╢─К╕╛Л·░К║°К╤─М└╟ Й╟─Л═╦Й╟└ Й╟²Л╡╢К╔╪ К╟≤М≥≤М∙╘К▀┬К▀╓.
         /// </summary>
-        /// <param name="element">╧щх╞гр ╟╢ц╪.</param>
+        /// <param name="element">К╟≤М≥≤М∙═ Й╟²Л╡╢.</param>
         void Return(T element);
 
         /// <summary>
-        /// ╟Э╦╝юз╥н╨нем ╟║а╝╟ё ╦П╣Г ╟╢ц╪╦╕ ╧щх╞ ╧ч╟М а╕╟егу╢о╢ы.
+        /// Й╢─К╕╛Л·░К║°К╤─М└╟ Й╟─Л═╦Й╟└ К╙╗К⌠═ Й╟²Л╡╢К╔╪ К╟≤М≥≤ К╟⌡ЙЁ═ Л═°Й╠╟М∙╘К▀┬К▀╓.
         /// </summary>
         void Clear();
     }

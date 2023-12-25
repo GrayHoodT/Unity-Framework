@@ -38,7 +38,7 @@ namespace GrayHoodT.Pool
         public Pooler(Func<T> createCall, Action<T> gotCall = null, Action<T> releasedCall = null, Action<T> destroyedCall = null, bool isCollectionCheck = true, int defaultCapacity = 10, int maxSize = 10000, bool isInitiallyCreated = false)
         {
             if (createCall == null)
-                throw new ArgumentNullException("createFunc");
+                throw new ArgumentNullException("CreateFunc");
 
             if (maxSize <= 0)
                 throw new ArgumentException("Max Size must be greater than 0", "maxSize");
@@ -156,4 +156,3 @@ namespace GrayHoodT.Pool
         }
     }
 }
-
