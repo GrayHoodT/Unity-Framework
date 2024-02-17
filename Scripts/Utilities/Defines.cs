@@ -4,14 +4,14 @@ using UnityEngine;
 
 namespace GrayHoodT
 {
-    public static class Configs
+    public static class Defines
     {
-        /* ¾À ÀüÈ¯ °ü·Ã È¯°æ º¯¼ö ¸ðÀ½. */
+        /* ï¿½ï¿½ ï¿½ï¿½È¯ ï¿½ï¿½ï¿½ï¿½ È¯ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½. */
         public const float FADE_ACTIVE_VALUE = 1f;
         public const float FADE_DEACTIVE_VALUE = 0f;
         public const float FADE_DURATION_TIME = 0.8f;
 
-        /* ¿Àµð¿À °ü·Ã È¯°æ º¯¼ö ¸ðÀ½. */
+        /* ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ È¯ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½. */
         public const float AUDIO_MAX_VOLUME = 100f;
         public const float AUDIO_MIN_VOLUME = 0f;
         public const float AUDIO_MUTE_VOLUME = -80f; 
@@ -19,13 +19,13 @@ namespace GrayHoodT
         public const float AUDIOSOURCE_MIN_VOLUME = 0f;
         public const float BGM_FADE_DURATION = 0.5f;
 
-        /* Size °ü·Ã ¸ðÀ½. */
+        /* Size ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½. */
         public const long ONE_GB = 1000000000;
         public const long ONE_MB = 1000000;
         public const long ONE_KB = 1000;
 
-        /* ¼ýÀÚ ´ÜÀ§ Ãà¾à ¸ðÀ½. */
-        public static readonly string[] UNIT_KR = new string[] { "", "¸¸", "¾ï", "Á¶", "°æ", "ÇØ", "ÀÚ", "¾ç", "±¸", "°£", "Á¤", "Àç", "±Ø", "Ç×ÇÏ»ç", "¾Æ½Â±â", "ºÒ°¡»çÀÇ", "¹«·®´ë¼ö" };
+        /* ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½. */
+        public static readonly string[] UNIT_KR = new string[] { "", "ï¿½ï¿½", "ï¿½ï¿½", "ï¿½ï¿½", "ï¿½ï¿½", "ï¿½ï¿½", "ï¿½ï¿½", "ï¿½ï¿½", "ï¿½ï¿½", "ï¿½ï¿½", "ï¿½ï¿½", "ï¿½ï¿½", "ï¿½ï¿½", "ï¿½ï¿½ï¿½Ï»ï¿½", "ï¿½Æ½Â±ï¿½", "ï¿½Ò°ï¿½ï¿½ï¿½ï¿½ï¿½", "ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½" };
     }
 }
 
