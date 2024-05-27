@@ -1,17 +1,15 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Events;
 
 namespace Core
 {
-    public class EventReceivable : MonoBehaviour
+    public abstract class EventReceivable<T> : MonoBehaviour
     {
         [SerializeField]
-        protected EventableSO eventSO;
+        protected EventableSO<T> eventSO;
 
         [Space(10), SerializeField]
-        protected UnityEvent<object> OnRaise;
+        protected UnityEvent<object, T> OnRaise;
 
         protected virtual void OnEnable()
         {
@@ -23,9 +21,9 @@ namespace Core
             eventSO.UnSubscribe(this);
         }
 
-        public void Respond(object sender)
+        public void Respond(object sender, T eventArgs)
         {
-            OnRaise?.Invoke(sender);
+            OnRaise?.Invoke(sender, eventArgs);
         }
     }
 }
