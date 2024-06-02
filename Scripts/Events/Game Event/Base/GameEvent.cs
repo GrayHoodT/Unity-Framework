@@ -9,16 +9,16 @@ public class GameEvent : ScriptableObject
     protected string desc;
 
     [SerializeField]
-    protected List<GameEventListener> receivers;
+    protected List<GameEventListenable> receivers;
 
-    public void Subscribe(GameEventListener element)
+    public void Subscribe(GameEventListenable element)
     {
         if (receivers.Contains(element) == true)
             return;
 
         receivers.Add(element);
     }
-    public bool UnSubscribe(GameEventListener element)
+    public bool UnSubscribe(GameEventListenable element)
     {
         return receivers.Remove(element);
     }

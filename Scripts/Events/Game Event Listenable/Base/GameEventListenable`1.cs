@@ -1,7 +1,7 @@
 using UnityEngine;
 using UnityEngine.Events;
 
-public abstract class GameEventListener<T> : MonoBehaviour
+public abstract class GameEventListenable<T> : MonoBehaviour
 {
     [SerializeField]
     protected GameEvent<T> eventSO;

@@ -8,23 +8,23 @@ public abstract class GameEvent<T> : ScriptableObject
     private string desc;
 
     [SerializeField]
-    private List<GameEventListener<T>> listeners;
+    private List<GameEventListenable<T>> listeners;
 
-    public void Subscribe(GameEventListener<T> element)
+    public void Subscribe(GameEventListenable<T> element)
     {
         if (listeners.Contains(element) == true)
             return;
 
         listeners.Add(element);
     }
-    public bool UnSubscribe(GameEventListener<T> element)
+    public bool UnSubscribe(GameEventListenable<T> element)
     {
         return listeners.Remove(element);
     }
 
     public void Raise(object sender, T eventArgs)
     {
-        foreach (GameEventListener<T> listener in listeners)
+        foreach (GameEventListenable<T> listener in listeners)
         {
             listener.Respond(sender, eventArgs);
         }

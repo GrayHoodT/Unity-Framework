@@ -1,1 +1,0 @@
-public class GameEventListenerDouble : GameEventListener<double> { }
