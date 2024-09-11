@@ -1,1 +1,0 @@
-public class GameEventBoolListenable : GameEventListenable<bool> { }

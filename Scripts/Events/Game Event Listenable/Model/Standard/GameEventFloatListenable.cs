@@ -1,1 +1,0 @@
-public class GameEventFloatListenable : GameEventListenable<float> { }
