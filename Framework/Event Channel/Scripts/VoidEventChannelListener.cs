@@ -13,6 +13,7 @@ public class VoidEventChannelListener : MonoBehaviour
     [SerializeField] 
     private UnityEvent onEventRaised;
 
+
     private void OnEnable()
     {
         if (this.eventChannel != null)

@@ -5,19 +5,13 @@ using UnityEngine.Events;
 
 public abstract class GenericEventChannelSO<T> : DescriptionSO
 {
-    protected UnityAction<T> onEventRaised;
-
-    public event UnityAction<T> OnEventRaised
-    {
-        add => onEventRaised += value;
-        remove => onEventRaised -= value;
-    }
+    public UnityAction<T> OnEventRaised;
 
     public void RaiseEvent(T parameter)
     {
-        if (onEventRaised != null)
+        if (OnEventRaised != null)
             return;
 
-        onEventRaised.Invoke(parameter);
+        OnEventRaised.Invoke(parameter);
     }
 }
