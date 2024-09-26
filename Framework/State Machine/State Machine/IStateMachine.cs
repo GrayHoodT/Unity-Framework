@@ -1,5 +1,10 @@
+using UnityEngine;
+
 public interface IStateMachine<T>
 {
-    void ChangeState(T newState);
-    void UpdateState();
+    T Owner { get; }
+    void Initialize(T owner, IState initState);
+    void ChangeState(IState nextState);
+    void Update();
+    void FixedUpdate();
 }
