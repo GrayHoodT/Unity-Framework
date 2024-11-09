@@ -8,7 +8,7 @@ public class Singleton<T> : IDisposable where T : class, new()
 
     public static bool HasInstance => instance != null;
     public static T TryGetInstance() => HasInstance ? instance : null;
-    public static T Instnace
+    public static T Instance
     {
         get
         {
