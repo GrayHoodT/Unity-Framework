@@ -30,6 +30,9 @@ public class Singleton<T> : IDisposable where T : class, new()
         instance = this as T;
     }
 
+    /// <summary>
+    /// 'Dispose' 함수를 재정의하여 사용할 경우, 'base.Dispose()' 호출이 반드시 필요함.
+    /// </summary>
     public virtual void Dispose()
     {
         if (instance != null && instance != this as T)
@@ -84,6 +87,9 @@ public class SingletonWithMonoBehaviour<T> : MonoBehaviour where T : MonoBehavio
         instance = this as T;
     }
 
+    /// <summary>
+    /// 'OnDestroy' 이벤트 함수를 재정의하여 사용할 경우, 'base.OnDestroy()' 호출이 반드시 필요함.
+    /// </summary>
     protected virtual void OnDestroy() 
     {
         if (instance != null || instance != this)
