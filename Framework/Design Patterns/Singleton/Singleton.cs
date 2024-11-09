@@ -22,9 +22,17 @@ public class Singleton<T> : IDisposable where T : class, new()
         }
     }
 
+    protected Singleton()
+    {
+        if (instance != null || instance != this as T)
+            return;
+
+        instance = this as T;
+    }
+
     public virtual void Dispose()
     {
-        if (instance != null && instance != this)
+        if (instance != null && instance != this as T)
             return;
 
         instance = null;
@@ -68,7 +76,10 @@ public class SingletonWithMonoBehaviour<T> : MonoBehaviour where T : MonoBehavio
             return;
 
         if (instance != null || instance != this)
+        {
             Destroy(gameObject);
+            return;
+        }
 
         instance = this as T;
     }
