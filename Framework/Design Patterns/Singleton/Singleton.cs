@@ -6,28 +6,29 @@ public class Singleton<T> : IDisposable where T : class, new()
     protected static T instance;
     protected static readonly object @lock = new();
 
-    public static bool HasInstance => instance != null;
-    public static T TryGetInstance() => HasInstance ? instance : null;
+    public static bool HasInstance => Singleton<T>.instance != null;
+    public static T TryGetInstance() => HasInstance ? Singleton<T>.instance : null;
     public static T Instance
     {
         get
         {
-            lock (@lock)
+            lock (Singleton<T>.@lock)
             {
-                if (instance == null)
-                    instance = new T();
+                if (Singleton<T>.instance == null)
+                    Singleton<T>.Create();
 
-                return instance;
+                return Singleton<T>.instance;
             }
         }
+        protected set => Singleton<T>.instance = value;
     }
 
-    protected Singleton()
+    public static void Create()
     {
-        if (instance != null || instance != this as T)
+        if ((object)Singleton<T>.instance != null)
             return;
 
-        instance = this as T;
+        Singleton<T>.instance = new T();
     }
 
     /// <summary>
@@ -35,10 +36,10 @@ public class Singleton<T> : IDisposable where T : class, new()
     /// </summary>
     public virtual void Dispose()
     {
-        if (instance != null && instance != this as T)
+        if (Singleton<T>.instance != null && Singleton<T>.instance != this as T)
             return;
 
-        instance = null;
+        Singleton<T>.instance = null;
     }
 }
 
@@ -47,27 +48,34 @@ public class SingletonWithMonoBehaviour<T> : MonoBehaviour where T : MonoBehavio
     protected static T instance;
     protected static readonly object @lock = new();
 
-    public static bool HasInstance => instance != null;
-    public static T TryGetInstance() => HasInstance ? instance : null;
+    public static bool HasInstance => SingletonWithMonoBehaviour<T>.instance != null;
+    public static T TryGetInstance() => HasInstance ? SingletonWithMonoBehaviour<T>.instance : null;
 
     public static T Instance
     {
         get
         {
-            lock (@lock)
+            lock (SingletonWithMonoBehaviour<T>.@lock)
             {
-                if (instance == null)
-                    instance = FindObjectOfType<T>();
+                if (SingletonWithMonoBehaviour<T>.instance == null)
+                    SingletonWithMonoBehaviour<T>.instance = FindObjectOfType<T>();
 
-                if (instance == null)
-                {
-                    GameObject go = new GameObject(typeof(T).Name);
-                    instance = go.AddComponent<T>();
-                }
+                if (SingletonWithMonoBehaviour<T>.instance == null)
+                    Create();
 
-                return instance;
+                return SingletonWithMonoBehaviour<T>.instance;
             }
         }
+    }
+
+    public static void Create()
+    {
+        if ((object)SingletonWithMonoBehaviour<T>.instance != null)
+            return;
+
+        GameObject go = new GameObject(typeof(T).Name);
+        go.hideFlags = HideFlags.DontSave;
+        go.AddComponent<T>();
     }
 
     /// <summary>
@@ -78,13 +86,13 @@ public class SingletonWithMonoBehaviour<T> : MonoBehaviour where T : MonoBehavio
         if (Application.isPlaying == false)
             return;
 
-        if (instance != null || instance != this)
+        if (SingletonWithMonoBehaviour<T>.instance != null || SingletonWithMonoBehaviour<T>.instance != this)
         {
             Destroy(gameObject);
             return;
         }
 
-        instance = this as T;
+        SingletonWithMonoBehaviour<T>.instance = this as T;
     }
 
     /// <summary>
@@ -92,9 +100,9 @@ public class SingletonWithMonoBehaviour<T> : MonoBehaviour where T : MonoBehavio
     /// </summary>
     protected virtual void OnDestroy() 
     {
-        if (instance != null || instance != this)
+        if (SingletonWithMonoBehaviour<T>.instance != null || SingletonWithMonoBehaviour<T>.instance != this)
             return;
 
-        instance = null;
+        SingletonWithMonoBehaviour<T>.instance = null;
     }
 }
