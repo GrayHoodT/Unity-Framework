@@ -86,7 +86,7 @@ public class SingletonWithMonoBehaviour<T> : MonoBehaviour where T : MonoBehavio
         if (Application.isPlaying == false)
             return;
 
-        if (SingletonWithMonoBehaviour<T>.instance != null || SingletonWithMonoBehaviour<T>.instance != this)
+        if (SingletonWithMonoBehaviour<T>.instance != null && SingletonWithMonoBehaviour<T>.instance != this)
         {
             Destroy(gameObject);
             return;
